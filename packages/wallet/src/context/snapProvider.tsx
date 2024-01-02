@@ -1,5 +1,4 @@
 import type { MetamaskSubspaceSnap } from '@subspace/metamask-subspace-adapter/build/snap'
-import dynamic from 'next/dynamic'
 import type { Dispatch, PropsWithChildren, Reducer } from 'react'
 import React, { createContext, useReducer } from 'react'
 import { hasMetaMask } from '../services/metamask'

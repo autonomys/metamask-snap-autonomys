@@ -8,7 +8,6 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { SnapContextProvider } from '../../context/snapProvider'
 import { useExtension, useLastConnection, useTransactions } from '../../states/extension'
 import { useWallet } from '../../states/wallet'
-import { ModalProps } from '../../types'
 import { MetaMask } from '../icons'
 
 export const defaultSnapId = 'local:http://localhost:8081'
@@ -21,14 +20,14 @@ interface SnapConnectorButtonProps {
 export const SnapConnectorButton: React.FC<SnapConnectorButtonProps> = ({ onClick, onClose }) => {
   const toast = useToast()
   const { address } = useAccount()
-  const { connectors, connectAsync, reset } = useConnect()
+  const { connectors, connectAsync } = useConnect()
   const { transactions, addTransactionToWatch } = useTransactions()
   const { disconnectAsync } = useDisconnect()
   const { enableSnap } = useWallet()
   const { api, extension, setMMApi, setExtension, setSubspaceAccount } = useExtension()
   const { subspaceAccount: lastSubspaceAccount, setSubspaceAccount: setLastSubspaceAccount } = useLastConnection()
 
-  const installSubspaceSnap = async (): Promise<{
+  const installSubspaceSnap = useCallback(async (): Promise<{
     isSnapInstalled: boolean
     snap?: MetamaskSubspaceSnap
   }> => {
@@ -146,7 +145,20 @@ export const SnapConnectorButton: React.FC<SnapConnectorButtonProps> = ({ onClic
       console.error('SnapConnectorButton-Error:', err)
       return { isSnapInstalled: false }
     }
-  }
+  }, [
+    addTransactionToWatch,
+    api,
+    connectAsync,
+    connectors,
+    disconnectAsync,
+    extension.data,
+    setExtension,
+    setLastSubspaceAccount,
+    setMMApi,
+    setSubspaceAccount,
+    toast,
+    transactions
+  ])
 
   const handleClick = useCallback(async () => {
     onClick && onClick()
