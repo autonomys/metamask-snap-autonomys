@@ -6,7 +6,7 @@ export function getCurrency(network: string): string {
   switch (network) {
     case 'gemini-3g':
     case 'gemini-3f':
-    case 'devNet':
+    case 'devnet':
       return 'tSSC';
   }
   return '';

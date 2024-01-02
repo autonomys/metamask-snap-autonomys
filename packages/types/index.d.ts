@@ -124,7 +124,7 @@ export interface UnitConfiguration {
   customViewUrl?: string;
 }
 
-export type SnapNetworks = 'gemini-3f' | 'gemini-3g' | 'devNet';
+export type SnapNetworks = 'gemini-3f' | 'gemini-3g' | 'devnet';
 
 export interface SnapConfig {
   networkName: SnapNetworks;

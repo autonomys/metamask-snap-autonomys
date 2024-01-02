@@ -66,7 +66,7 @@ SnapConfig {
   unit?: UnitConfiguration;
 }
 
-SnapNetworks = "gemini-3f" | "gemini-3g" | "devNet";
+SnapNetworks = "gemini-3f" | "gemini-3g" | "devnet";
 
 UnitConfiguration {
   symbol: string;

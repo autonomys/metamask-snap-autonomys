@@ -30,7 +30,7 @@ const getCoinTypeByNetwork = (network: SnapNetworks): number => {
   switch (network) {
     case 'gemini-3g':
     case 'gemini-3f':
-    case 'devNet':
+    case 'devnet':
       return 354;
   }
 };

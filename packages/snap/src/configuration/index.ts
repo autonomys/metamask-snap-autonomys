@@ -4,7 +4,7 @@ import {
   defaultConfiguration,
   gemini3gConfiguration,
   gemini3fConfiguration,
-  devNetConfiguration
+  devnetConfiguration
 } from './predefined';
 
 export function getDefaultConfiguration(networkName: string): SnapConfig {
@@ -15,9 +15,9 @@ export function getDefaultConfiguration(networkName: string): SnapConfig {
     case 'gemini-3f':
       console.log('Gemini-3f configuration selected');
       return gemini3fConfiguration;
-    case 'devNet':
-      console.log('DevNet configuration selected');
-      return devNetConfiguration;
+    case 'devnet':
+      console.log('devnet configuration selected');
+      return devnetConfiguration;
     default:
       return defaultConfiguration;
   }

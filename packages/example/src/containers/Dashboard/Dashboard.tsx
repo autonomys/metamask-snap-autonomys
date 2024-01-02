@@ -101,7 +101,7 @@ export const Dashboard = (): React.JSX.Element => {
               <Select defaultValue={'gemini-3g'} onChange={handleNetworkChange}>
                 <MenuItem value={'gemini-3g'}>Gemini-3G</MenuItem>
                 <MenuItem value={'gemini-3f'}>Gemini-3F</MenuItem>
-                <MenuItem value={'devNet'}>DevNet</MenuItem>
+                <MenuItem value={'devnet'}>Devnet</MenuItem>
               </Select>
             </Box>
             <Grid container spacing={3} alignItems={'stretch'}>

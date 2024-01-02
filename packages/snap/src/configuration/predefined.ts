@@ -22,9 +22,9 @@ export const gemini3fConfiguration: SnapConfig = {
   wsRpcUrl: 'https://rpc-0.gemini-3f.subspace.network/ws'
 };
 
-export const devNetConfiguration: SnapConfig = {
+export const devnetConfiguration: SnapConfig = {
   addressPrefix: 2254,
-  networkName: 'devNet',
+  networkName: 'devnet',
   unit: {
     decimals: 12,
     image: 'https://polkadot.js.org/apps/static/polkadot-circle.1eea41b2..svg',
