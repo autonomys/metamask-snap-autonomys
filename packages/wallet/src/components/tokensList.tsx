@@ -1,11 +1,10 @@
 import { ArrowForwardIcon, DeleteIcon, InfoOutlineIcon, LinkIcon, StarIcon } from '@chakra-ui/icons'
-import { Button, Grid, GridItem, HStack, StackDivider, Text, Tooltip, VStack, useDisclosure } from '@chakra-ui/react'
+import { Grid, GridItem, StackDivider, Text, Tooltip, VStack, useDisclosure } from '@chakra-ui/react'
 import { utils } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useContractReads } from 'wagmi'
 import { NOVA_SCAN_URL, erc20ABI, mockTokens } from '../constants'
 import { useWallet } from '../hooks/useWallet'
-import { useExtension } from '../states/extension'
 import { useView } from '../states/view'
 import type { Token } from '../states/wallet'
 import { useWallet as useWalletStates } from '../states/wallet'
@@ -99,8 +98,9 @@ export const TokensList: React.FC<TokensListProps> = ({ isMinimized }) => {
 
   const handleImproveTokensData = useCallback(
     () =>
-      tokensAndResults.forEach((token) => {
-        if (token.results && (!token.name || token.name === '' || !token.symbol || token.symbol === ''))
+      tokensAndResults
+        .filter((t) => t.results && (!t.name || t.name === '' || !t.symbol || t.symbol === ''))
+        .forEach((token) =>
           editToken({
             chainId: token.chainId,
             address: token.address,
@@ -108,7 +108,7 @@ export const TokensList: React.FC<TokensListProps> = ({ isMinimized }) => {
             symbol: token.results.symbol,
             decimals: token.results.decimals
           } as Token)
-      }),
+        ),
     [tokensAndResults]
   )
 
@@ -205,9 +205,9 @@ export const TokensList: React.FC<TokensListProps> = ({ isMinimized }) => {
     })
   }, [tokensAndResults])
 
-  // useEffect(() => {
-  //   handleImproveTokensData()
-  // }, [tokensAndResults])
+  useEffect(() => {
+    handleImproveTokensData()
+  }, [tokensAndResults])
 
   useEffect(() => {
     setIsClient(true)

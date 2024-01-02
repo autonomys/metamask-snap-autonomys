@@ -5,8 +5,7 @@ import { hexToFormattedNumber } from '../utils'
 
 export const useWallet = (network: 'consensus' | 'evm') => {
   const [clientSide, setClientSide] = useState(false)
-  // const [state] = useContext(MetaMaskContext)
-  const { isConnected, address: addressEvm } = useAccount()
+  const { address: addressEvm } = useAccount()
   const { data: balanceEVM } = useBalance({ address: addressEvm })
   const { data: ensName } = useEnsName({ address: addressEvm, chainId: 1 })
   const { subspaceAccount, accountDetails } = useExtension()

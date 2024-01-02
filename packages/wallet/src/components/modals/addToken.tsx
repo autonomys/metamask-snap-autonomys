@@ -13,7 +13,7 @@ import {
   ModalOverlay,
   useToast
 } from '@chakra-ui/react'
-import { AsyncCreatableSelect, OptionBase, Select, SingleValue } from 'chakra-react-select'
+import { AsyncCreatableSelect, OptionBase, SingleValue } from 'chakra-react-select'
 import React, { useCallback, useMemo, useState } from 'react'
 import { supportedTokens } from '../../constants'
 import { Token, initialToken, useWallet } from '../../states/wallet'
@@ -95,6 +95,7 @@ export const AddToken: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     setFieldsErrors({})
     onClose()
   }, [onClose])
+
   return (
     <Modal isOpen={isOpen} onClose={handleOnClose}>
       <ModalOverlay />
