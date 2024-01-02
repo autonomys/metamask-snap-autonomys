@@ -1,6 +1,6 @@
 import type { ApiPromise } from '@polkadot/api/';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import type { TxPayload } from '@chainsafe/metamask-polkadot-types';
+import type { TxPayload } from '@subspace/metamask-subspace-types';
 import { getAddress } from './getAddress';
 
 export async function generateTransactionPayload(
@@ -21,7 +21,10 @@ export async function generateTransactionPayload(
     nonce
   };
   // define transaction method
-  const transaction: SubmittableExtrinsic<'promise'> = api.tx.balances.transfer(to, amount);
+  const transaction: SubmittableExtrinsic<'promise'> = api.tx.balances.transferAllowDeath(
+    to,
+    amount
+  );
 
   // create SignerPayload
   const signerPayload = api.createType('SignerPayload', {

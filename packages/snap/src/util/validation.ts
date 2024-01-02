@@ -1,4 +1,4 @@
-import type { BlockId, TxPayload } from '@chainsafe/metamask-polkadot-types';
+import type { BlockId, TxPayload } from '@subspace/metamask-subspace-types';
 import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type { Describe } from 'superstruct';
 import { array, enums, number, object, optional, string, type, union } from 'superstruct';
@@ -21,7 +21,7 @@ const SignaturePayloadJSONSchema = type({
 export const validSignPayloadJSONSchema: Describe<{
   payload: SignerPayloadJSON;
 }> = object({
-  payload: SignaturePayloadJSONSchema
+  payload: SignaturePayloadJSONSchema as Describe<SignerPayloadJSON>
 });
 
 export type SignPayloadRawTypes = 'bytes' | 'payload';
@@ -73,5 +73,5 @@ export const validSendSchema: Describe<{
   txPayload: object({
     payload: SignaturePayloadJSONSchema,
     tx: string()
-  })
+  }) as Describe<TxPayload>
 });

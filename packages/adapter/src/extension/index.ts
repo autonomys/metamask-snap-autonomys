@@ -1,22 +1,22 @@
 import type { Injected, InjectedAccount, InjectedWindow } from '@polkadot/extension-inject/types';
+import type { SnapConfig } from '@subspace/metamask-subspace-types';
 import type { SignerPayloadJSON, SignerPayloadRaw, SignerResult } from '@polkadot/types/types';
 import type { HexString } from '@polkadot/util/types';
-import type { SnapConfig } from '@chainsafe/metamask-polkadot-types';
 import type { SnapInstallationParamNames } from '../index';
-import { enablePolkadotSnap } from '../index';
+import { enableSubspaceSnap } from '../index';
 import { hasMetaMask, isMetamaskSnapsSupported } from '../utils';
 
 interface Web3Window extends InjectedWindow {
   ethereum: unknown;
 }
 
-interface IEnablePolkadotSnapParams {
+interface IEnableSubspaceSnapParams {
   config?: SnapConfig;
   snapOrigin?: string;
   snapInstallationParams?: Record<SnapInstallationParamNames, unknown>;
 }
 
-interface IInjectPolkadotSnap extends IEnablePolkadotSnapParams {
+interface IInjectSubspaceSnap extends IEnableSubspaceSnapParams {
   win: Web3Window;
   injectedSnapId?: string;
 }
@@ -24,22 +24,22 @@ interface IInjectPolkadotSnap extends IEnablePolkadotSnapParams {
 function transformAccounts(accounts: string[]): InjectedAccount[] {
   return accounts.map((address, i) => ({
     address,
-    name: `Polkadot Snap #${i}`,
+    name: `Subspace Snap #${i}`,
     type: 'ethereum'
   }));
 }
 
-function injectPolkadotSnap({
+function injectSubspaceSnap({
   win,
-  injectedSnapId = 'metamask-polkadot-snap',
+  injectedSnapId = 'metamask-subspace-snap',
   config,
   snapOrigin,
   snapInstallationParams
-}: IInjectPolkadotSnap): void {
+}: IInjectSubspaceSnap): void {
   win.injectedWeb3[injectedSnapId] = {
     enable: async (): Promise<Injected> => {
       const snap = (
-        await enablePolkadotSnap(config, snapOrigin, snapInstallationParams)
+        await enableSubspaceSnap(config, snapOrigin, snapInstallationParams)
       ).getMetamaskSnapApi();
 
       return {
@@ -69,11 +69,12 @@ function injectPolkadotSnap({
     version: '0'
   };
 }
+
 /**
- * @param injectedSnapId - Optional ID of injected snap, default: "metamask-polkadot-snap"
+ * @param injectedSnapId - Optional ID of injected snap, default: "metamask-subspace-snap"
  */
-export function initPolkadotSnap(
-  { config, snapOrigin, snapInstallationParams }: IEnablePolkadotSnapParams,
+export function initSubspaceSnap(
+  { config, snapOrigin, snapInstallationParams }: IEnableSubspaceSnapParams,
   injectedSnapId?: string
 ): Promise<boolean> {
   return new Promise((resolve): void => {
@@ -83,7 +84,7 @@ export function initPolkadotSnap(
     if (hasMetaMask())
       void isMetamaskSnapsSupported().then((result) => {
         if (result) {
-          injectPolkadotSnap({ win, injectedSnapId, config, snapOrigin, snapInstallationParams });
+          injectSubspaceSnap({ win, injectedSnapId, config, snapOrigin, snapInstallationParams });
           resolve(true);
         } else {
           resolve(false);

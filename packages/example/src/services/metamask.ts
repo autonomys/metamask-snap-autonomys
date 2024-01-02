@@ -1,8 +1,8 @@
 import { web3EnablePromise } from '@polkadot/extension-dapp';
-import type { InjectedMetamaskExtension } from '@chainsafe/metamask-polkadot-adapter/src/types';
+import type { InjectedMetamaskExtension } from '@subspace/metamask-subspace-adapter/src/types';
 import type { InjectedExtension } from '@polkadot/extension-inject/types';
-import { enablePolkadotSnap } from '@chainsafe/metamask-polkadot-adapter';
-import type { MetamaskPolkadotSnap } from '@chainsafe/metamask-polkadot-adapter/build/snap';
+import { enableSubspaceSnap } from '@subspace/metamask-subspace-adapter';
+import type { MetamaskSubspaceSnap } from '@subspace/metamask-subspace-adapter/build/snap';
 
 export function hasMetaMask(): boolean {
   if (!window.ethereum) {
@@ -13,10 +13,10 @@ export function hasMetaMask(): boolean {
 
 export const defaultSnapId = 'local:http://localhost:8081';
 
-export async function installPolkadotSnap(): Promise<boolean> {
+export async function installSubspaceSnap(): Promise<boolean> {
   const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : defaultSnapId;
   try {
-    await enablePolkadotSnap({ networkName: 'westend' }, snapId);
+    await enableSubspaceSnap({ networkName: 'gemini-3g' }, snapId);
     console.info('Snap installed!!');
     return true;
   } catch (err) {
@@ -25,7 +25,7 @@ export async function installPolkadotSnap(): Promise<boolean> {
   }
 }
 
-export async function isPolkadotSnapInstalled(): Promise<boolean> {
+export async function isSubspaceSnapInstalled(): Promise<boolean> {
   return !!(await getInjectedMetamaskExtension());
 }
 
@@ -44,17 +44,17 @@ function getMetamaskExtension(
 
 export interface SnapInitializationResponse {
   isSnapInstalled: boolean;
-  snap?: MetamaskPolkadotSnap;
+  snap?: MetamaskSubspaceSnap;
 }
 
-export async function initiatePolkadotSnap(): Promise<SnapInitializationResponse> {
+export async function initiateSubspaceSnap(): Promise<SnapInitializationResponse> {
   const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : defaultSnapId;
 
   try {
     console.info('Attempting to connect to snap...');
-    const metamaskPolkadotSnap = await enablePolkadotSnap({ networkName: 'westend' }, snapId);
+    const metamaskSubspaceSnap = await enableSubspaceSnap({ networkName: 'gemini-3g' }, snapId);
     console.info('Snap installed!');
-    return { isSnapInstalled: true, snap: metamaskPolkadotSnap };
+    return { isSnapInstalled: true, snap: metamaskSubspaceSnap };
   } catch (e) {
     console.error(e);
     return { isSnapInstalled: false };
