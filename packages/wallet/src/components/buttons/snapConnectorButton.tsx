@@ -55,27 +55,7 @@ export const SnapConnectorButton: React.FC<SnapConnectorButtonProps> = ({ onClic
 
       const mmApi = snap.getMetamaskSnapApi()
       const address = await mmApi.getAddress()
-      console.log('address', address)
-      const balance = await mmApi.getBalance()
-      console.log('balance', balance)
-
       const allTx = await mmApi.getAllTransactions()
-      console.log('allTx', allTx)
-
-      if (!api) {
-        const wsProvider = new WsProvider(process.env.NEXT_PUBLIC_PROVIDER_URL)
-        const api = await ApiPromise.create({ provider: wsProvider })
-
-        const block = await api.rpc.chain.getBlock()
-        console.log('block', block)
-      } else {
-        const block = await api.rpc.chain.getBlock()
-        console.log('block', block.toHuman())
-      }
-
-      console.log('allTx[0].block', allTx[0].block)
-      // const block = await api.rpc.chain.getHeader(allTx[0].block)
-      // console.log('block', block)
 
       for (const tx of allTx) {
         const isAlreadyWatched = transactions.find((t) => t.extrinsicHash === tx.hash)
@@ -91,14 +71,8 @@ export const SnapConnectorButton: React.FC<SnapConnectorButtonProps> = ({ onClic
           })
       }
 
-      // const latestBlock = await mmApi.getLatestBlock()
-      // console.info('latestBlock:', latestBlock)
-      // const pubKey = await mmApi.getPublicKey()
-      // console.info('pubKey:', pubKey)
-
       setSubspaceAccount(address)
       setLastSubspaceAccount(address)
-
       setMMApi(mmApi)
       setExtension({
         error: null,

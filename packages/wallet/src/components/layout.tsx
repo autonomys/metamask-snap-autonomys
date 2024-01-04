@@ -16,7 +16,6 @@ import {
 } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
 import { EXTERNAL_ROUTES, layoutStyles, textStyles } from '../constants'
 import { useView } from '../states/view'
@@ -35,7 +34,6 @@ const DisconnectButton = dynamic(() => import('./buttons/disconnectButton').then
 })
 
 export const Header: React.FC = () => {
-  const router = useRouter()
   const [isDesktopView] = useMediaQuery('(min-width: 800px)', { ssr: true, fallback: false })
 
   if (isDesktopView)

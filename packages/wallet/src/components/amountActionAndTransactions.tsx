@@ -13,16 +13,22 @@ import {
   VStack,
   useToast
 } from '@chakra-ui/react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { EXTERNAL_ROUTES } from '../constants'
 import { useWallet } from '../hooks/useWallet'
 import { useView } from '../states/view'
+// import { ConnectWalletButton } from './buttons/walletButton'
 import { Receive } from './modals/receive'
 import { Send } from './modals/send'
 import { TokensList } from './tokensList'
 import { TransactionsList } from './transactionsList'
+
+const ConnectWalletButton = dynamic(() => import('./buttons/walletButton').then((m) => m.ConnectWalletButton), {
+  ssr: false
+})
 
 interface AmountActionAndTransactionsProps {
   isReceiveOpen: boolean
@@ -42,11 +48,11 @@ export const AmountActionAndTransactions: React.FC<AmountActionAndTransactionsPr
   onSendClose
 }) => {
   const { network } = useView()
-  const router = useRouter()
+  const { push, query } = useRouter()
   const [isClient, setIsClient] = useState(false)
   const [tabsIndex, setTabsIndex] = useState(0)
   const toast = useToast()
-  const { walletBalance, walletBalanceFormatted, walletLabel, address } = useWallet(network)
+  const { walletBalance, walletBalanceFormatted, walletLabel, address, isConnected } = useWallet(network)
 
   const handleCopyAddress = useCallback(() => {
     address && navigator.clipboard.writeText(address)
@@ -63,12 +69,10 @@ export const AmountActionAndTransactions: React.FC<AmountActionAndTransactionsPr
   const handleTabChange = useCallback((index: number) => {
     switch (index) {
       case 0:
-        // setNetwork('consensus')
-        router.push('/wallet/evm/tokens')
+        push('/wallet/evm/tokens')
         break
       case 1:
-        // setNetwork('evm')
-        router.push('/wallet/evm/transactions')
+        push('/wallet/evm/transactions')
         break
       default:
         break
@@ -81,39 +85,47 @@ export const AmountActionAndTransactions: React.FC<AmountActionAndTransactionsPr
   }, [])
 
   useEffect(() => {
-    if (router.query.walletType === 'tokens') {
+    if (query.walletType === 'tokens') {
       setTabsIndex(0)
-      // setNetwork('consensus')
-    } else if (router.query.walletType === 'transactions') {
+    } else if (query.walletType === 'transactions') {
       setTabsIndex(1)
-      // setNetwork('evm')
     }
-  }, [router.query.walletType])
+  }, [query.walletType])
 
   return (
     <VStack divider={<StackDivider borderColor='gray.200' />} spacing={4} align='stretch' m='2'>
       <Box h='10vh'>
         <Center>
           <VStack>
-            <Button colorScheme='brand' rightIcon={<CopyIcon />} variant='outline' onClick={handleCopyAddress}>
-              {walletLabel}
-            </Button>
-            <Heading size='lg'>{walletBalanceFormatted} tSSC</Heading>
-            {showFaucetLink && (
-              <Box mt='1'>
-                <Link href={EXTERNAL_ROUTES.SUBSPACE_FAUCET} target='_blank'>
-                  Use the Faucet to get some testnet tokens
-                </Link>
-              </Box>
+            {isConnected ? (
+              <>
+                <Button
+                  colorScheme='brand'
+                  rightIcon={isConnected ? <CopyIcon /> : undefined}
+                  variant='outline'
+                  onClick={handleCopyAddress}>
+                  {walletLabel}
+                </Button>
+                <Heading size='lg'>{walletBalanceFormatted} tSSC</Heading>
+                {showFaucetLink && (
+                  <Box mt='1'>
+                    <Link href={EXTERNAL_ROUTES.SUBSPACE_FAUCET} target='_blank'>
+                      Use the Faucet to get some testnet tokens
+                    </Link>
+                  </Box>
+                )}
+                <Box mt='2'>
+                  <Button colorScheme='brand' mr='12' onClick={onReceiveOpen}>
+                    Receive
+                  </Button>
+                  <Button colorScheme='brand' onClick={onSendOpen}>
+                    Send
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <ConnectWalletButton />
             )}
-            <Box mt='2'>
-              <Button colorScheme='brand' mr='12' onClick={onReceiveOpen}>
-                Receive
-              </Button>
-              <Button colorScheme='brand' onClick={onSendOpen}>
-                Send
-              </Button>
-            </Box>
           </VStack>
         </Center>
         <Receive isOpen={isReceiveOpen} onClose={onReceiveClose} />
@@ -157,4 +169,3 @@ export const AmountActionAndTransactions: React.FC<AmountActionAndTransactionsPr
     </VStack>
   )
 }
-// onChange={handleTabChange}

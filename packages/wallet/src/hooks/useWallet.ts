@@ -33,8 +33,21 @@ export const useWallet = (network: 'consensus' | 'evm') => {
 
   const walletLabel = useMemo(() => {
     if (network === 'consensus' && address) return address.slice(0, 4) + '...' + address?.slice(-4)
-    return ensName != null ? ensName : address?.slice(0, 4) + '...' + address?.slice(-4)
+    else if (network === 'evm' && ensName) return ensName
+    else if (network === 'evm' && address) return address?.slice(0, 4) + '...' + address?.slice(-4)
+    return 'Connect Wallet'
   }, [network, address, ensName])
+
+  const isConnected = useMemo(() => {
+    switch (network) {
+      case 'consensus':
+        return !!subspaceAccount
+      case 'evm':
+        return !!addressEvm
+      default:
+        return false
+    }
+  }, [network, subspaceAccount, addressEvm])
 
   useEffect(() => {
     setClientSide(true)
@@ -45,11 +58,14 @@ export const useWallet = (network: 'consensus' | 'evm') => {
       walletLabel,
       walletBalance,
       walletBalanceFormatted,
-      address
+      address,
+      isConnected
     }
   return {
     walletLabel: 'Connect Wallet',
     walletBalance: '0',
-    address: null
+    walletBalanceFormatted: '0',
+    address: null,
+    isConnected: false
   }
 }
