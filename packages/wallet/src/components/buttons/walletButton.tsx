@@ -51,7 +51,7 @@ const ExtensionIcon: React.FC<ExtensionIconProps> = ({ extension }) => {
   }
 }
 
-export const WalletButton: React.FC = () => {
+export const ConnectWallet: React.FC = () => {
   const { address } = useAccountStatus()
   const { connector } = useAccount()
   const { extension, chainDetails } = useExtension()
@@ -63,81 +63,100 @@ export const WalletButton: React.FC = () => {
   }, [])
 
   return (
-    <Box position='relative' w={12} h='10vh' verticalAlign='center' m={4} p={2}>
-      <AbsoluteCenter axis='vertical'>
-        <Menu>
-          <MenuButton as={Button} variant='outline' colorScheme='brand' rightIcon={<ChevronDownIcon />}>
-            <SubspaceWalletIcon width='24px' height='24px' fill='#612893' />
-          </MenuButton>
-          <Portal>
-            <MenuList>
-              {extension && extension.data && extension.data.accounts.length > 0 && (
-                <MenuGroup title='Gemini 3G'>
-                  <MenuItem
-                    key={`${extension.data.defaultAccount.meta.source}-${extension.data.defaultAccount.address}`}
-                    _hover={{
-                      bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
-                    }}>
-                    <ExtensionIcon extension={extension.data.defaultAccount.meta.source} />
-                    <Text ml='2'>
-                      {`${
-                        extension.data.defaultAccount.meta.name && `(${extension.data.defaultAccount.meta.name})`
-                      } ${formatAddress(encodeAddress(extension.data.defaultAccount.address, ss58Format))}`}
-                    </Text>
-                  </MenuItem>
-                  {extension.data.accounts
-                    .filter((account) => account.address !== extension.data?.defaultAccount.address)
-                    .map((account) => (
-                      <MenuItem
-                        key={`${account.meta.source}-${account.address}`}
-                        onClick={() => handleSelectWallet(account.address)}
-                        _hover={{
-                          bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
-                        }}>
-                        <ExtensionIcon extension={account.meta.source} />
-                        <Text ml='2'>
-                          {`${account.meta.name && `(${account.meta.name})`} ${formatAddress(
-                            encodeAddress(account.address, ss58Format)
-                          )}`}
-                        </Text>
-                      </MenuItem>
-                    ))}
-                </MenuGroup>
-              )}
-              <MenuDivider />
-              {address && (
-                <MenuGroup title='Nova - Gemini 3G EVM'>
-                  <MenuItem>
-                    {connector && <ExtensionIcon extension={connector.id} />}
-                    <Text ml='2'>{`${address && `${formatAddress(address)}`}`}</Text>ª
-                  </MenuItem>
-                </MenuGroup>
-              )}
+    <MenuList>
+      {extension && extension.data && extension.data.accounts.length > 0 && (
+        <MenuGroup title='Gemini 3G'>
+          <MenuItem
+            key={`${extension.data.defaultAccount.meta.source}-${extension.data.defaultAccount.address}`}
+            _hover={{
+              bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
+            }}>
+            <ExtensionIcon extension={extension.data.defaultAccount.meta.source} />
+            <Text ml='2'>
+              {`${
+                extension.data.defaultAccount.meta.name && `(${extension.data.defaultAccount.meta.name})`
+              } ${formatAddress(encodeAddress(extension.data.defaultAccount.address, ss58Format))}`}
+            </Text>
+          </MenuItem>
+          {extension.data.accounts
+            .filter((account) => account.address !== extension.data?.defaultAccount.address)
+            .map((account) => (
+              <MenuItem
+                key={`${account.meta.source}-${account.address}`}
+                onClick={() => handleSelectWallet(account.address)}
+                _hover={{
+                  bgGradient: 'linear(to-r, #A28CD2, #F4ABFD)'
+                }}>
+                <ExtensionIcon extension={account.meta.source} />
+                <Text ml='2'>
+                  {`${account.meta.name && `(${account.meta.name})`} ${formatAddress(
+                    encodeAddress(account.address, ss58Format)
+                  )}`}
+                </Text>
+              </MenuItem>
+            ))}
+        </MenuGroup>
+      )}
+      <MenuDivider />
+      {address && (
+        <MenuGroup title='Nova - Gemini 3G EVM'>
+          <MenuItem>
+            {connector && <ExtensionIcon extension={connector.id} />}
+            <Text ml='2'>{`${address && `${formatAddress(address)}`}`}</Text>
+          </MenuItem>
+        </MenuGroup>
+      )}
 
-              <MenuGroup title='Connect wallet'>
-                <MenuItem>
-                  <SnapConnectorButton onClose={onClose} />
-                </MenuItem>
-                <MenuItem>
-                  <SubConnectButton connectorId='polkadot' label='SubWallet' onClose={onClose} />
-                </MenuItem>
-                <MenuItem>
-                  <SubConnectButton connectorId='subwallet' label='SubWallet' onClose={onClose} />
-                </MenuItem>
-                <MenuItem>
-                  <EvmConnectButton connectorId='metaMask' label='MetaMask' onClose={onClose} />
-                </MenuItem>
-                <MenuItem>
-                  <EvmConnectButton connectorId='walletConnect' label='WalletConnect' onClose={onClose} />
-                </MenuItem>
-                <MenuItem>
-                  <EvmConnectButton connectorId='coinbaseWallet' label='Coinbase' onClose={onClose} />
-                </MenuItem>
-              </MenuGroup>
-            </MenuList>
-          </Portal>
-        </Menu>
-      </AbsoluteCenter>
-    </Box>
+      <MenuGroup title='Connect wallet'>
+        <MenuItem>
+          <SnapConnectorButton onClose={onClose} />
+        </MenuItem>
+        <MenuItem>
+          <SubConnectButton connectorId='polkadot' label='SubWallet' onClose={onClose} />
+        </MenuItem>
+        <MenuItem>
+          <SubConnectButton connectorId='subwallet' label='SubWallet' onClose={onClose} />
+        </MenuItem>
+        <MenuItem>
+          <EvmConnectButton connectorId='metaMask' label='MetaMask' onClose={onClose} />
+        </MenuItem>
+        <MenuItem>
+          <EvmConnectButton connectorId='walletConnect' label='WalletConnect' onClose={onClose} />
+        </MenuItem>
+        <MenuItem>
+          <EvmConnectButton connectorId='coinbaseWallet' label='Coinbase' onClose={onClose} />
+        </MenuItem>
+      </MenuGroup>
+    </MenuList>
   )
 }
+
+export const WalletButton: React.FC = () => (
+  <Box position='relative' w={12} h='10vh' verticalAlign='center' m={4} p={2}>
+    <AbsoluteCenter axis='vertical'>
+      <Menu>
+        <MenuButton as={Button} variant='outline' colorScheme='brand' rightIcon={<ChevronDownIcon />}>
+          <SubspaceWalletIcon width='24px' height='24px' fill='#612893' />
+        </MenuButton>
+        <Portal>
+          <ConnectWallet />
+        </Portal>
+      </Menu>
+    </AbsoluteCenter>
+  </Box>
+)
+
+export const ConnectWalletButton: React.FC = () => (
+  <Box position='relative' w={12} h='10vh' verticalAlign='center' m={4} p={2}>
+    <AbsoluteCenter axis='vertical'>
+      <Menu>
+        <MenuButton as={Button} variant='outline' colorScheme='brand' rightIcon={<ChevronDownIcon />}>
+          Connect Wallet
+        </MenuButton>
+        <Portal>
+          <ConnectWallet />
+        </Portal>
+      </Menu>
+    </AbsoluteCenter>
+  </Box>
+)
