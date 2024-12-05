@@ -1,3 +1,6 @@
+import type { InjectedExtension } from '@polkadot/extension-inject/types';
+import type { SignerPayloadJSON } from '@polkadot/types/types';
+import type { SignerPayloadRaw } from '@polkadot/types/types/extrinsic';
 import type {
   BlockInfo,
   SnapConfig,
@@ -5,9 +8,6 @@ import type {
   Transaction,
   TxPayload
 } from '@subspace/metamask-subspace-types';
-import type { InjectedExtension } from '@polkadot/extension-inject/types';
-import type { SignerPayloadRaw } from '@polkadot/types/types/extrinsic';
-import type { SignerPayloadJSON } from '@polkadot/types/types';
 
 export interface MetamaskSnapApi {
   getAddress(): Promise<string>;
@@ -31,6 +31,22 @@ export interface MetamaskSnapApi {
   send(signature: string, txPayload: TxPayload): Promise<Transaction>;
 
   generateTransactionPayload(amount: string | number, to: string): Promise<TxPayload>;
+
+  generateRegisterOperatorPayload(
+    domainId: string,
+    amountToStake: string | number,
+    values: {
+      signingKey: string;
+      minimumNominatorStake: string;
+      nominationTax: number;
+    }
+  ): Promise<TxPayload>;
+
+  generateDeregisterOperatorPayload(operatorId: string): Promise<TxPayload>;
+
+  generateNominateOperatorPayload(operatorId: string, amount: string | number): Promise<TxPayload>;
+
+  generateWithdrawStakePayload(operatorId: string): Promise<TxPayload>;
 }
 
 export interface InjectedMetamaskExtension extends InjectedExtension {
@@ -46,7 +62,7 @@ declare global {
         request: SnapRpcMethodRequest | { method: string; params?: never[] }
       ) => Promise<unknown>;
       on: (eventName: unknown, callback: unknown) => unknown;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       request: <T>(request: SnapRpcMethodRequest | { method: string; params?: any }) => Promise<T>;
     };
   }

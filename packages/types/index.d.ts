@@ -64,6 +64,41 @@ export interface GenerateTransactionPayload {
   };
 }
 
+export interface GenerateRegisterOperatorPayload {
+  method: 'generateRegisterOperatorPayload';
+  params: {
+    domainId: string;
+    amountToStake: string | number;
+    values: {
+      signingKey: string;
+      minimumNominatorStake: string;
+      nominationTax: number;
+    };
+  };
+}
+
+export interface GenerateDeregisterOperatorPayload {
+  method: 'generateDeregisterOperatorPayload';
+  params: {
+    operatorId: string;
+  };
+}
+
+export interface GenerateNominateOperatorPayload {
+  method: 'generateNominateOperatorPayload';
+  params: {
+    operatorId: string;
+    amount: string | number;
+  };
+}
+
+export interface GenerateWithdrawStakePayload {
+  method: 'generateWithdrawStakePayload';
+  params: {
+    operatorId: string;
+  };
+}
+
 export interface SendUnitRequest {
   method: 'send';
   params: {
@@ -85,7 +120,11 @@ export type MetamaskSubspaceRpcRequest =
   | SignPayloadJSONRequest
   | SignPayloadRawRequest
   | SendUnitRequest
-  | GenerateTransactionPayload;
+  | GenerateTransactionPayload
+  | GenerateRegisterOperatorPayload
+  | GenerateDeregisterOperatorPayload
+  | GenerateNominateOperatorPayload
+  | GenerateWithdrawStakePayload;
 
 type Method = MetamaskSubspaceRpcRequest['method'];
 

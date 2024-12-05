@@ -1,3 +1,4 @@
+import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type {
   BlockInfo,
   MetamaskSubspaceRpcRequest,
@@ -7,7 +8,6 @@ import type {
   Transaction,
   TxPayload
 } from '@subspace/metamask-subspace-types';
-import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type { MetamaskSubspaceSnap } from './snap';
 
 async function sendSnapMethod(
@@ -118,6 +118,53 @@ export async function generateTransactionPayload(
 ): Promise<TxPayload> {
   return (await sendSnapMethod(
     { method: 'generateTransactionPayload', params: { amount, to } },
+    this.snapId
+  )) as TxPayload;
+}
+
+export async function generateRegisterOperatorPayload(
+  this: MetamaskSubspaceSnap,
+  domainId: string,
+  amountToStake: string | number,
+  values: {
+    signingKey: string;
+    minimumNominatorStake: string;
+    nominationTax: number;
+  }
+): Promise<TxPayload> {
+  return (await sendSnapMethod(
+    { method: 'generateRegisterOperatorPayload', params: { domainId, amountToStake, values } },
+    this.snapId
+  )) as TxPayload;
+}
+
+export async function generateDeregisterOperatorPayload(
+  this: MetamaskSubspaceSnap,
+  operatorId: string
+): Promise<TxPayload> {
+  return (await sendSnapMethod(
+    { method: 'generateDeregisterOperatorPayload', params: { operatorId } },
+    this.snapId
+  )) as TxPayload;
+}
+
+export async function generateNominateOperatorPayload(
+  this: MetamaskSubspaceSnap,
+  amount: string | number,
+  operatorId: string
+): Promise<TxPayload> {
+  return (await sendSnapMethod(
+    { method: 'generateNominateOperatorPayload', params: { amount, operatorId } },
+    this.snapId
+  )) as TxPayload;
+}
+
+export async function generateWithdrawStakePayload(
+  this: MetamaskSubspaceSnap,
+  operatorId: string
+): Promise<TxPayload> {
+  return (await sendSnapMethod(
+    { method: 'generateWithdrawStakePayload', params: { operatorId } },
     this.snapId
   )) as TxPayload;
 }

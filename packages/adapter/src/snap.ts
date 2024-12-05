@@ -1,7 +1,11 @@
 import type { SnapConfig } from '@subspace/metamask-subspace-types';
 import {
   exportSeed,
+  generateDeregisterOperatorPayload,
+  generateNominateOperatorPayload,
+  generateRegisterOperatorPayload,
   generateTransactionPayload,
+  generateWithdrawStakePayload,
   getAddress,
   getAllTransactions,
   getBalance,
@@ -31,6 +35,10 @@ export class MetamaskSubspaceSnap {
     return {
       exportSeed: exportSeed.bind(this),
       generateTransactionPayload: generateTransactionPayload.bind(this),
+      generateRegisterOperatorPayload: generateRegisterOperatorPayload.bind(this),
+      generateDeregisterOperatorPayload: generateDeregisterOperatorPayload.bind(this),
+      generateNominateOperatorPayload: generateNominateOperatorPayload.bind(this),
+      generateWithdrawStakePayload: generateWithdrawStakePayload.bind(this),
       getAddress: getAddress.bind(this),
       getAllTransactions: getAllTransactions.bind(this),
       getBalance: getBalance.bind(this),
