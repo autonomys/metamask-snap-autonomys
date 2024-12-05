@@ -1,5 +1,5 @@
-import type { BlockId, TxPayload } from '@subspace/metamask-subspace-types';
 import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
+import type { BlockId, TxPayload } from '@subspace/metamask-subspace-types';
 import type { Describe } from 'superstruct';
 import { array, enums, number, object, optional, string, type, union } from 'superstruct';
 
@@ -63,6 +63,38 @@ export const validGenerateTransactionPayloadSchema: Describe<{
 }> = object({
   amount: union([string(), number()]),
   to: string()
+});
+
+export const validGenerateRegisterOperatorPayloadSchema: Describe<{
+  domainId: string;
+  amountToStake: string | number;
+  values: {
+    signingKey: string;
+    minimumNominatorStake: string;
+    nominationTax: number;
+  };
+}> = object({
+  amountToStake: union([string(), number()]),
+  domainId: string(),
+  values: object({
+    signingKey: string(),
+    minimumNominatorStake: string(),
+    nominationTax: number()
+  })
+});
+
+export const validGenerateOperatorPayloadSchema: Describe<{
+  operatorId: string;
+}> = object({
+  operatorId: string()
+});
+
+export const validGenerateNominateOperatorPayloadSchema: Describe<{
+  operatorId: string;
+  amount: string | number;
+}> = object({
+  amount: union([string(), number()]),
+  operatorId: string()
 });
 
 export const validSendSchema: Describe<{

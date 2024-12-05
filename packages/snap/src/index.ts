@@ -1,21 +1,28 @@
-import type { ApiPromise } from '@polkadot/api/promise';
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
+import type { ApiPromise } from '@polkadot/api/promise';
 import { assert } from 'superstruct';
 import type { MetamaskState } from './interfaces';
 import { EmptyMetamaskState } from './interfaces';
-import { getPublicKey } from './rpc/getPublicKey';
-import { exportSeed } from './rpc/exportSeed';
-import { getBalance } from './rpc/substrate/getBalance';
-import { getAddress } from './rpc/getAddress';
-import { getTransactions } from './rpc/substrate/getTransactions';
-import { getBlock } from './rpc/substrate/getBlock';
 import { getApi, resetApi } from './polkadot/api';
 import { configure } from './rpc/configure';
-import { signPayloadJSON, signPayloadRaw } from './rpc/substrate/sign';
+import { exportSeed } from './rpc/exportSeed';
+import { generateDeregisterOperatorPayload } from './rpc/generateDeregisterOperatorPayload';
+import { generateNominateOperatorPayload } from './rpc/generateNominateOperatorPayload';
+import { generateRegisterOperatorPayload } from './rpc/generateRegisterOperatorPayload';
 import { generateTransactionPayload } from './rpc/generateTransactionPayload';
+import { generateWithdrawStakePayload } from './rpc/generateWithdrawStakePayload';
+import { getAddress } from './rpc/getAddress';
+import { getPublicKey } from './rpc/getPublicKey';
 import { send } from './rpc/send';
+import { getBalance } from './rpc/substrate/getBalance';
+import { getBlock } from './rpc/substrate/getBlock';
+import { getTransactions } from './rpc/substrate/getTransactions';
+import { signPayloadJSON, signPayloadRaw } from './rpc/substrate/sign';
 import {
   validConfigureSchema,
+  validGenerateNominateOperatorPayloadSchema,
+  validGenerateOperatorPayloadSchema,
+  validGenerateRegisterOperatorPayloadSchema,
   validGenerateTransactionPayloadSchema,
   validGetBlockSchema,
   validSendSchema,
@@ -30,6 +37,10 @@ const apiDependentMethods = [
   'signPayloadJSON',
   'signPayloadRaw',
   'generateTransactionPayload',
+  'generateRegisterOperatorPayload',
+  'generateDeregisterOperatorPayload',
+  'generateNominateOperatorPayload',
+  'generateWithdrawStakePayload',
   'send'
 ];
 
@@ -99,6 +110,31 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case 'generateTransactionPayload':
       assert(request.params, validGenerateTransactionPayloadSchema);
       return await generateTransactionPayload(api, request.params.to, request.params.amount);
+
+    case 'generateRegisterOperatorPayload':
+      assert(request.params, validGenerateRegisterOperatorPayloadSchema);
+      return await generateRegisterOperatorPayload(
+        api,
+        request.params.domainId,
+        request.params.amountToStake,
+        request.params.values
+      );
+
+    case 'generateDeregisterOperatorPayload':
+      assert(request.params, validGenerateOperatorPayloadSchema);
+      return await generateDeregisterOperatorPayload(api, request.params.operatorId);
+
+    case 'generateNominateOperatorPayload':
+      assert(request.params, validGenerateNominateOperatorPayloadSchema);
+      return await generateNominateOperatorPayload(
+        api,
+        request.params.operatorId,
+        request.params.amount
+      );
+
+    case 'generateWithdrawStakePayload':
+      assert(request.params, validGenerateOperatorPayloadSchema);
+      return await generateWithdrawStakePayload(api, request.params.operatorId);
 
     case 'send':
       assert(request.params, validSendSchema);
